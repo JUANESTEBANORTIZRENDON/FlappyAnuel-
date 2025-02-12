@@ -1,112 +1,125 @@
+// Obtener el elemento "canvas" desde el HTML y su contexto 2D para dibujar
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
-// load images
-
+// Cargar imágenes del juego
 var bird = new Image();
 var bg = new Image();
 var fg = new Image();
 var pipeNorth = new Image();
 var pipeSouth = new Image();
 
-bird.src = "images/bird.png";
-bg.src = "images/bg.png";
-fg.src = "images/fg.png";
-pipeNorth.src = "images/pipeNorth.png";
-pipeSouth.src = "images/pipeSouth.png";
+// Asignar la fuente de cada imagen
+bird.src = "images/bird.png";      // Imagen del pájaro
+bg.src = "images/bg.png";          // Imagen del fondo
+fg.src = "images/fg.png";          // Imagen del suelo
+pipeNorth.src = "images/pipeNorth.png"; // Parte superior del tubo
+pipeSouth.src = "images/pipeSouth.png"; // Parte inferior del tubo
 
+// Variables del juego
+var gap = 85;  // Espacio entre los tubos
+var constant;  // Variable que se usa para calcular la posición del tubo inferior
 
-// some variables
+var bX = 10;   // Posición en X del pájaro
+var bY = 150;  // Posición en Y del pájaro
 
-var gap = 85;
-var constant;
+var gravity = 1.5; // Gravedad que empuja al pájaro hacia abajo
 
-var bX = 10;
-var bY = 150;
+var score = 0; // Puntuación
 
-var gravity = 1.5;
-
-var score = 0;
-
-// audio files
-
+// Cargar efectos de sonido
 var fly = new Audio();
 var scor = new Audio();
 
-fly.src = "sounds/fly.mp3";
-scor.src = "sounds/score.mp3";
+fly.src = "sounds/fly.mp3";  // Sonido cuando el pájaro salta
+scor.src = "sounds/score.mp3"; // Sonido al pasar un tubo
 
-// on key down
+// Evento para detectar cuando se presiona una tecla
+document.addEventListener("keydown", moveUp);
 
-document.addEventListener("keydown",moveUp);
-
-function moveUp(){
-    bY -= 25;
-    fly.play();
+/**
+ * Función que mueve al pájaro hacia arriba cuando se presiona una tecla
+ */
+function moveUp() {
+    bY -= 25; // Mueve el pájaro 25 píxeles hacia arriba
+    fly.play(); // Reproduce el sonido de vuelo
 }
 
-// pipe coordinates
-
+// Array para almacenar los tubos
 var pipe = [];
 
+// Insertar el primer tubo en la lista
 pipe[0] = {
-    x : cvs.width,
-    y : 0
+    x: cvs.width,  // Se coloca el tubo fuera de la pantalla, en la parte derecha
+    y: 0           // La posición en Y se ajustará dinámicamente
 };
 
-// draw images
+/**
+ * Función principal que dibuja todos los elementos en el canvas
+ */
+function draw() {
+    // Dibujar el fondo
+    ctx.drawImage(bg, 0, 0);
 
-function draw(){
-    
-    ctx.drawImage(bg,0,0);
-    
-    
-    for(var i = 0; i < pipe.length; i++){
-        
-        constant = pipeNorth.height+gap;
-        ctx.drawImage(pipeNorth,pipe[i].x,pipe[i].y);
-        ctx.drawImage(pipeSouth,pipe[i].x,pipe[i].y+constant);
-             
+    // Dibujar los tubos
+    for (var i = 0; i < pipe.length; i++) {
+
+        // Calcular la posición del tubo inferior
+        constant = pipeNorth.height + gap;
+
+        // Dibujar el tubo superior
+        ctx.drawImage(pipeNorth, pipe[i].x, pipe[i].y);
+
+        // Dibujar el tubo inferior con un espacio entre los tubos
+        ctx.drawImage(pipeSouth, pipe[i].x, pipe[i].y + constant);
+
+        // Mover el tubo hacia la izquierda
         pipe[i].x--;
-        
-        if( pipe[i].x == 125 ){
+
+        // Cuando un tubo alcanza cierta posición, generar un nuevo tubo
+        if (pipe[i].x == 125) {
             pipe.push({
-                x : cvs.width,
-                y : Math.floor(Math.random()*pipeNorth.height)-pipeNorth.height
-            }); 
+                x: cvs.width,  // Se genera en la parte derecha de la pantalla
+                y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height  // Posición aleatoria
+            });
         }
 
-        // detect collision
-        
-        if( bX + bird.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width && (bY <= pipe[i].y + pipeNorth.height || bY+bird.height >= pipe[i].y+constant) || bY + bird.height >=  cvs.height - fg.height){
-            location.reload(); // reload the page
+        // Detectar colisiones con los tubos o el suelo
+        if (
+            (bX + bird.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width &&
+                (bY <= pipe[i].y + pipeNorth.height || bY + bird.height >= pipe[i].y + constant)) ||
+            (bY + bird.height >= cvs.height - fg.height) // Colisión con el suelo
+        ) {
+            location.reload(); // Reiniciar el juego si hay una colisión
         }
-        
-        if(pipe[i].x == 5){
+
+        // Aumentar la puntuación cuando el pájaro pasa un tubo
+        if (pipe[i].x == 5) {
             score++;
-            scor.play();
+            scor.play(); // Sonido de puntuación
         }
-        
-        
     }
 
-    ctx.drawImage(fg,0,cvs.height - fg.height);
-    
-    ctx.drawImage(bird,bX,bY);
-    
+    // Dibujar el suelo en la parte inferior
+    ctx.drawImage(fg, 0, cvs.height - fg.height);
+
+    // Dibujar al pájaro en su posición actual
+    ctx.drawImage(bird, bX, bY);
+
+    // Aplicar la gravedad para que el pájaro caiga
     bY += gravity;
-    
-    ctx.fillStyle = "#000";
-    ctx.font = "20px Verdana";
-    ctx.fillText("Score : "+score,10,cvs.height-20);
-    
+
+    // Mostrar la puntuación en pantalla
+    ctx.fillStyle = "#000"; // Color negro
+    ctx.font = "20px Verdana"; // Fuente
+    ctx.fillText("Puntaje : " + score, 10, cvs.height - 20); // Posición del texto
+
+    // Llamar la función nuevamente para actualizar la animación
     requestAnimationFrame(draw);
-    
 }
 
+// Iniciar el juego
 draw();
-
-
 
 
 
