@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\images",
+    "\\sounds"
   ],
   "SelectedNode": "\\index.html",
   "PreviewInSolutionExplorer": false

@@ -2,6 +2,18 @@
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
+function resizeCanvas() {
+    let aspectRatio = 288 / 512; // Relación de aspecto original
+
+    if (window.innerWidth / window.innerHeight > aspectRatio) {
+        cvs.height = window.innerHeight * 0.8;
+        cvs.width = cvs.height * aspectRatio;
+    } else {
+        cvs.width = window.innerWidth * 0.8;
+        cvs.height = cvs.width / aspectRatio;
+    }
+}
+
 // Cargar imágenes del juego
 var bird = new Image();
 var bg = new Image();
