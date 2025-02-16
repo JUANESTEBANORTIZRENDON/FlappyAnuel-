@@ -83,65 +83,42 @@ pipe[0] = {
  * Función principal que dibuja todos los elementos en el canvas
  */
 function draw() {
-    // Dibujar el fondo
-    ctx.drawImage(bg, 0, 0);
+    ctx.clearRect(0, 0, cvs.width, cvs.height); // Limpia el canvas antes de redibujar
 
-    // Dibujar los tubos
+    // Dibujar el fondo escalado
+    ctx.drawImage(bg, 0, 0, cvs.width, cvs.height);
+
     for (var i = 0; i < pipe.length; i++) {
+        let pipeWidth = cvs.width * 0.2; // Ajustar ancho de los tubos (20% del ancho del canvas)
+        let pipeHeight = pipeWidth * (pipeNorth.height / pipeNorth.width); // Mantener la proporción
 
-        // Calcular la posición del tubo inferior
-        constant = pipeNorth.height + gap;
+        let gap = cvs.height * 0.2; // Espacio proporcional entre los tubos
 
-        // Dibujar el tubo superior
-        ctx.drawImage(pipeNorth, pipe[i].x, pipe[i].y);
+        ctx.drawImage(pipeNorth, pipe[i].x, pipe[i].y, pipeWidth, pipeHeight);
+        ctx.drawImage(pipeSouth, pipe[i].x, pipe[i].y + pipeHeight + gap, pipeWidth, pipeHeight);
 
-        // Dibujar el tubo inferior con un espacio entre los tubos
-        ctx.drawImage(pipeSouth, pipe[i].x, pipe[i].y + constant);
-
-        // Mover el tubo hacia la izquierda
-        pipe[i].x--;
-
-        // Cuando un tubo alcanza cierta posición, generar un nuevo tubo
-        if (pipe[i].x == 125) {
-            pipe.push({
-                x: cvs.width,  // Se genera en la parte derecha de la pantalla
-                y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height  // Posición aleatoria
-            });
-        }
-
-        // Detectar colisiones con los tubos o el suelo
-        if (
-            (bX + bird.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width &&
-                (bY <= pipe[i].y + pipeNorth.height || bY + bird.height >= pipe[i].y + constant)) ||
-            (bY + bird.height >= cvs.height - fg.height) // Colisión con el suelo
-        ) {
-            location.reload(); // Reiniciar el juego si hay una colisión
-        }
-
-        // Aumentar la puntuación cuando el pájaro pasa un tubo
-        if (pipe[i].x == 5) {
-            score++;
-            scor.play(); // Sonido de puntuación
-        }
+        pipe[i].x -= 2; // Mover los tubos a la izquierda
     }
 
-    // Dibujar el suelo en la parte inferior
-    ctx.drawImage(fg, 0, cvs.height - fg.height);
+    // Dibujar el suelo escalado
+    let groundHeight = cvs.height * 0.15;
+    ctx.drawImage(fg, 0, cvs.height - groundHeight, cvs.width, groundHeight);
 
-    // Dibujar al pájaro en su posición actual
-    ctx.drawImage(bird, bX, bY);
+    // Dibujar el pájaro escalado
+    let birdSize = cvs.width * 0.1; // Ajustar tamaño del pájaro
+    ctx.drawImage(bird, bX, bY, birdSize, birdSize);
 
-    // Aplicar la gravedad para que el pájaro caiga
-    bY += gravity;
+    // Aplicar gravedad al pájaro
+    bY += gravity * (cvs.height / 512); // Ajustar gravedad al tamaño del canvas
 
-    // Mostrar la puntuación en pantalla
-    ctx.fillStyle = "#000"; // Color negro
-    ctx.font = "20px Verdana"; // Fuente
-    ctx.fillText("Puntaje : " + score, 10, cvs.height - 20); // Posición del texto
+    // Mostrar la puntuación
+    ctx.fillStyle = "#000";
+    ctx.font = (cvs.width * 0.05) + "px Verdana"; // Escalar la fuente
+    ctx.fillText("Puntaje : " + score, 10, cvs.height - 20);
 
-    // Llamar la función nuevamente para actualizar la animación
     requestAnimationFrame(draw);
 }
+
 
 // Iniciar el juego
 draw();
