@@ -2,17 +2,30 @@
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
-function resizeCanvas() {
-    let aspectRatio = 288 / 512; // Relación de aspecto original
+// Establecer la relación de aspecto del juego
+const ASPECT_RATIO = 288 / 512; // Relación original del juego
 
-    if (window.innerWidth / window.innerHeight > aspectRatio) {
-        cvs.height = window.innerHeight * 0.8;
-        cvs.width = cvs.height * aspectRatio;
+function resizeCanvas() {
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    // Determinar el tamaño óptimo sin deformar el juego
+    if (width / height > ASPECT_RATIO) {
+        cvs.height = height * 0.9; // 90% del alto disponible
+        cvs.width = cvs.height * ASPECT_RATIO;
     } else {
-        cvs.width = window.innerWidth * 0.8;
-        cvs.height = cvs.width / aspectRatio;
+        cvs.width = width * 0.9; // 90% del ancho disponible
+        cvs.height = cvs.width / ASPECT_RATIO;
     }
+
+    // Asegurar que el juego se vuelva a dibujar después del cambio
+    draw();
 }
+
+// Ajustar el tamaño del canvas al cargar y cambiar la pantalla
+window.addEventListener("load", resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
+
 
 // Cargar imágenes del juego
 var bird = new Image();
