@@ -14,7 +14,10 @@ function ajustarCanvas() {
     }
 }
 ajustarCanvas();
-window.addEventListener('resize', ajustarCanvas);
+window.addEventListener('resize', () => {
+    ajustarCanvas();
+    reiniciarJuego(); // 🔄 Reajuste completo al redimensionar
+});
 
 // Cargar imágenes del juego
 var bird = new Image();
@@ -30,18 +33,17 @@ pipeNorth.src = "images/pipeNorth.png";
 pipeSouth.src = "images/pipeSouth.png";
 
 // Variables del juego
-var gap = 85;
-var constant;
-
-var bX = 10;
-var bY = 150;
+var gap;
+var bX;
+var bY;
 var gravity = 1.5;
 var score = 0;
+var pipe = [];
+var gameOver = false;
 
 // Cargar sonidos
 var fly = new Audio();
 var scor = new Audio();
-
 fly.src = "sounds/fly.mp3";
 scor.src = "sounds/score.mp3";
 
@@ -54,25 +56,36 @@ function moveUp() {
     fly.play();
 }
 
-// Array para tubos
-var pipe = [];
-pipe[0] = {
-    x: cvs.width,
-    y: 0
-};
+// 🔧 💡 Generar altura aleatoria del tubo superior
+function generarAlturaAleatoria() {
+    let alturaDisponible = cvs.height - (fg.height + gap + pipeNorth.height);
+    return Math.floor(Math.random() * -alturaDisponible);
+}
 
-var gameOver = false;
+// 🛠️ Inicializar o reiniciar el juego
+function reiniciarJuego() {
+    gap = cvs.height * 0.2;       // Proporcional al alto
+    bX = cvs.width * 0.1;         // Posición inicial del pájaro
+    bY = cvs.height / 2;          // Centro vertical
+    score = 0;
+    pipe = [{
+        x: cvs.width,
+        y: generarAlturaAleatoria() // ✅ Primer tubo corregido
+    }];
+    gameOver = false;
+    draw();
+}
 
 // 🏃 Dibujo principal
 function draw() {
     if (gameOver) return;
 
     ctx.clearRect(0, 0, cvs.width, cvs.height);
-
     ctx.drawImage(bg, 0, 0, cvs.width, cvs.height);
 
     for (var i = 0; i < pipe.length; i++) {
-        constant = pipeNorth.height + gap;
+        let constant = pipeNorth.height + gap;
+
         ctx.drawImage(pipeNorth, pipe[i].x, pipe[i].y);
         ctx.drawImage(pipeSouth, pipe[i].x, pipe[i].y + constant);
 
@@ -81,7 +94,7 @@ function draw() {
         if (pipe[i].x === 125) {
             pipe.push({
                 x: cvs.width,
-                y: Math.floor(Math.random() * pipeNorth.height) - pipeNorth.height
+                y: generarAlturaAleatoria() // ✅ Altura ajustada
             });
         }
 
@@ -93,7 +106,7 @@ function draw() {
             bY + bird.height >= cvs.height - fg.height
         ) {
             gameOver = true;
-            setTimeout(() => location.reload(), 1000);
+            setTimeout(() => reiniciarJuego(), 1000);
         }
 
         if (pipe[i].x === 5) {
@@ -106,7 +119,6 @@ function draw() {
     ctx.drawImage(bird, bX, bY);
 
     bY += gravity;
-
     if (bY >= cvs.height - fg.height - bird.height) {
         bY = cvs.height - fg.height - bird.height;
     }
@@ -119,9 +131,7 @@ function draw() {
 }
 
 // 🚀 Iniciar el juego
-draw();
-
-
+reiniciarJuego();
 
 
 
