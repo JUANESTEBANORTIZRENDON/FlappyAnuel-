@@ -4,11 +4,15 @@ var ctx = cvs.getContext("2d");
 
 // 🎯 Ajuste responsive: Canvas dinámico para PC y móviles
 function ajustarCanvas() {
-    if (window.innerWidth <= 768) { // 📱 Móviles
-        cvs.width = window.innerWidth * 0.95;  // 🏃 95% del ancho de la pantalla
-        cvs.height = cvs.width * (512 / 288);  // 📏 Mantener proporción original
+    const proporcionesOriginales = 512 / 288; // 🏃 Relación original alto/ancho
+    const anchoPantalla = window.innerWidth;
+    const altoPantalla = window.innerHeight;
+
+    if (anchoPantalla <= 768) { // 📱 Móviles
+        cvs.width = anchoPantalla * 0.95;  // 📏 95% del ancho del dispositivo
+        cvs.height = cvs.width * proporcionesOriginales;  // 🔄 Mantener proporción
     } else {
-        cvs.width = 288;                      // 🖥️ Tamaño original para PC
+        cvs.width = 288;  // 🖥️ Tamaño original para PC
         cvs.height = 512;
     }
 }
@@ -125,6 +129,7 @@ function draw() {
 }
 
 reiniciarJuego();
+
 
 
 

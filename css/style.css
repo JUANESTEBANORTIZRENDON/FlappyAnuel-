@@ -22,11 +22,13 @@ body, html {
     letter-spacing: 2px;
 }
 
-/* 🎨 ✨ Margen al canvas con color del título */
+/* 🎨 ✨ Estilos del canvas */
 #canvas {
     border: 5px solid #34d399;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
+    max-width: 95vw;
+    height: auto;
 }
 
 /* 🎨 🌐 Responsive para móviles */
@@ -37,7 +39,7 @@ body, html {
     }
 
     #canvas {
-        width: 95vw;
+        width: 100%;
         height: auto;
         display: block;
         margin: auto;
