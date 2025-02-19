@@ -5,8 +5,14 @@ var ctx = cvs.getContext("2d");
 // 🎯 Ajuste responsive SOLO para móviles
 function ajustarCanvas() {
     if (window.innerWidth <= 768) { // 📱 Solo para pantallas móviles
-        cvs.width = window.innerWidth;
-        cvs.height = window.innerHeight;
+        let aspectRatio = 288 / 512;
+        if (window.innerWidth / window.innerHeight > aspectRatio) {
+            cvs.height = window.innerHeight;
+            cvs.width = window.innerHeight * aspectRatio;
+        } else {
+            cvs.width = window.innerWidth;
+            cvs.height = window.innerWidth / aspectRatio;
+        }
     } else {
         // ⚡ Dimensiones originales en PC
         cvs.width = 288;
@@ -56,10 +62,10 @@ function moveUp() {
     fly.play();
 }
 
-// 🔧 💡 Generar altura aleatoria del tubo superior
+// 🔧 💡 Generar altura aleatoria del tubo superior con límites
 function generarAlturaAleatoria() {
-    let alturaDisponible = cvs.height - (fg.height + gap + pipeNorth.height);
-    return Math.floor(Math.random() * -alturaDisponible);
+    let alturaMaxima = cvs.height - fg.height - gap - pipeNorth.height;
+    return Math.floor(Math.random() * alturaMaxima) - pipeNorth.height / 2;
 }
 
 // 🛠️ Inicializar o reiniciar el juego
@@ -91,10 +97,10 @@ function draw() {
 
         pipe[i].x--;
 
-        if (pipe[i].x === 125) {
+        if (pipe[i].x === Math.floor(cvs.width / 2)) {
             pipe.push({
                 x: cvs.width,
-                y: generarAlturaAleatoria() // ✅ Altura ajustada
+                y: generarAlturaAleatoria() // ✅ Altura ajustada y controlada
             });
         }
 
@@ -132,6 +138,7 @@ function draw() {
 
 // 🚀 Iniciar el juego
 reiniciarJuego();
+
 
 
 
