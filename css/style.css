@@ -40,18 +40,23 @@ body, html {
     height: auto;
 }
 
-/* Estilos responsivos */
+﻿ /* 🎨 Responsive SOLO para móviles */
 @media (max-width: 768px) {
-    .titulo-juego {
-        font-size: 24px;
-        margin-top: 15px;
-    }
+    #canvas
 
-    #canvas {
-        border-width: 3px;
-    }
+{
+    width: 100vw;
+    height: auto;
+    display: block;
+    margin: auto;
+}
 
-    body, html {
-        overflow-y: auto;
-    }
+}
+
+/* PC (sin modificaciones) */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
 }
