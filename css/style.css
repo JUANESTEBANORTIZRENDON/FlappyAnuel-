@@ -1,4 +1,35 @@
-﻿/* 🎨 Responsive SOLO para móviles */
+﻿/* 🎨 Fondo de la página (mantenido) */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* 🎮 ✨ Estilo retro pixelado para el título */
+.titulo-juego {
+    font-family: 'Press Start 2P', cursive;
+    color: #34d399; /* 🌿 Mismo verde menta del borde */
+    text-shadow: 2px 2px 4px #000000;
+    font-size: 32px;
+    margin: 30px 0;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+/* 🎨 ✨ Margen al canvas con color del título */
+#canvas {
+    border: 5px solid #34d399; /* 🌿 Borde del color del título */
+    border-radius: 15px; /* 🔄 Bordes redondeados */
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.6); /* 💡 Sombra luminosa verde */
+}
+
+/* 🎨 Responsive SOLO para móviles */
 @media (max-width: 768px) {
     #canvas {
         width: 100vw;
@@ -6,12 +37,4 @@
         display: block;
         margin: auto;
     }
-}
-
-/* 🖥️ PC (sin modificaciones) */
-body, html {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
 }
