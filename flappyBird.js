@@ -2,27 +2,23 @@
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
-// 🎯 Ajuste responsive SOLO para móviles
+// 🎯 Ajuste responsive: Canvas separado para PC y móviles
+let isMobile = window.innerWidth <= 768;
+
 function ajustarCanvas() {
-    if (window.innerWidth <= 768) { // 📱 Solo para pantallas móviles
-        let aspectRatio = 288 / 512;
-        if (window.innerWidth / window.innerHeight > aspectRatio) {
-            cvs.height = window.innerHeight;
-            cvs.width = window.innerHeight * aspectRatio;
-        } else {
-            cvs.width = window.innerWidth;
-            cvs.height = window.innerWidth / aspectRatio;
-        }
-    } else {
-        // ⚡ Dimensiones originales en PC
+    if (isMobile) { // 📱 Móviles
+        cvs.width = 288;
+        cvs.height = 400;
+    } else {        // 🖥️ PC
         cvs.width = 288;
         cvs.height = 512;
     }
 }
 ajustarCanvas();
 window.addEventListener('resize', () => {
+    isMobile = window.innerWidth <= 768;
     ajustarCanvas();
-    reiniciarJuego(); // 🔄 Reajuste completo al redimensionar
+    reiniciarJuego(); // 🔄 Reiniciar al redimensionar
 });
 
 // Cargar imágenes del juego
@@ -62,17 +58,18 @@ function moveUp() {
     fly.play();
 }
 
-// 🔧 💡 Generar altura aleatoria del tubo superior con límites
+// 🔧 💡 Generar altura controlada para evitar tubos flotantes
 function generarAlturaAleatoria() {
-    let alturaMaxima = cvs.height - fg.height - gap - pipeNorth.height;
-    return Math.floor(Math.random() * alturaMaxima) - pipeNorth.height / 2;
+    let alturaDisponible = cvs.height - fg.height - gap - pipeSouth.height;
+    let alturaMinima = -pipeNorth.height + 50;  // 🎯 Ajuste del mínimo para evitar flotación
+    return Math.floor(Math.random() * (alturaDisponible - alturaMinima + 1)) + alturaMinima;
 }
 
 // 🛠️ Inicializar o reiniciar el juego
 function reiniciarJuego() {
-    gap = cvs.height * 0.2;       // Proporcional al alto
-    bX = cvs.width * 0.1;         // Posición inicial del pájaro
-    bY = cvs.height / 2;          // Centro vertical
+    gap = isMobile ? cvs.height * 0.22 : cvs.height * 0.18; // 📏 Espacio proporcional
+    bX = cvs.width * 0.1;
+    bY = cvs.height / 2;
     score = 0;
     pipe = [{
         x: cvs.width,
@@ -138,6 +135,10 @@ function draw() {
 
 // 🚀 Iniciar el juego
 reiniciarJuego();
+
+
+
+
 
 
 
