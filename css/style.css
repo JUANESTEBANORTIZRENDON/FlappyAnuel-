@@ -1,0 +1,16 @@
+﻿/* 🎨 Responsive SOLO para móviles */
+@media (max-width: 768px) {
+    #canvas {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+    }
+}
+
+/* 🖥️ PC (sin modificaciones) */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
