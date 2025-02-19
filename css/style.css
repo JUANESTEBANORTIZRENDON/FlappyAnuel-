@@ -1,4 +1,4 @@
-﻿/* 🎨 Fondo de la página (mantenido) */
+﻿/* 🎨 Fondo de la página */
 body, html {
     margin: 0;
     padding: 0;
@@ -14,7 +14,7 @@ body, html {
 /* 🎮 ✨ Estilo retro pixelado para el título */
 .titulo-juego {
     font-family: 'Press Start 2P', cursive;
-    color: #34d399; /* 🌿 Mismo verde menta del borde */
+    color: #34d399;
     text-shadow: 2px 2px 4px #000000;
     font-size: 32px;
     margin: 30px 0;
@@ -29,12 +29,22 @@ body, html {
     box-shadow: 0 0 15px rgba(52, 211, 153, 0.6); /* 💡 Sombra luminosa verde */
 }
 
-/* 🎨 Responsive SOLO para móviles */
+/* 🎨 🌐 Responsive para móviles */
 @media (max-width: 768px) {
+    .titulo-juego {
+        font-size: 24px; /* 🔎 Reducir tamaño del título en móviles */
+        margin-top: 15px;
+    }
+
     #canvas {
-        width: 100vw;
-        height: auto;
+        width: 95vw; /* 📱 Canvas ajustado al ancho de pantalla */
+        height: auto; /* 🔄 Altura automática para mantener proporción */
         display: block;
         margin: auto;
+        border-width: 3px; /* ✂️ Borde más delgado en móviles */
+    }
+
+    body, html {
+        overflow-y: auto; /* 🖱️ Habilitar scroll vertical si es necesario */
     }
 }
