@@ -24,27 +24,27 @@ body, html {
 
 /* 🎨 ✨ Margen al canvas con color del título */
 #canvas {
-    border: 5px solid #34d399; /* 🌿 Borde del color del título */
-    border-radius: 15px; /* 🔄 Bordes redondeados */
-    box-shadow: 0 0 15px rgba(52, 211, 153, 0.6); /* 💡 Sombra luminosa verde */
+    border: 5px solid #34d399;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
 }
 
 /* 🎨 🌐 Responsive para móviles */
 @media (max-width: 768px) {
     .titulo-juego {
-        font-size: 24px; /* 🔎 Reducir tamaño del título en móviles */
+        font-size: 24px;
         margin-top: 15px;
     }
 
     #canvas {
-        width: 95vw; /* 📱 Canvas ajustado al ancho de pantalla */
-        height: auto; /* 🔄 Altura automática para mantener proporción */
+        width: 95vw;
+        height: auto;
         display: block;
         margin: auto;
-        border-width: 3px; /* ✂️ Borde más delgado en móviles */
+        border-width: 3px;
     }
 
     body, html {
-        overflow-y: auto; /* 🖱️ Habilitar scroll vertical si es necesario */
+        overflow-y: auto;
     }
 }

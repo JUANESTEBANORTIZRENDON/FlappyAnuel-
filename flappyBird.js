@@ -1,27 +1,24 @@
-﻿// Obtener el elemento "canvas" desde el HTML y su contexto 2D para dibujar
+﻿// 🎨 Obtener el elemento "canvas" y su contexto
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
-// 🎯 Ajuste responsive: Canvas separado para PC y móviles
-let isMobile = window.innerWidth <= 768;
-
+// 🎯 Ajuste responsive: Canvas dinámico para PC y móviles
 function ajustarCanvas() {
-    if (isMobile) { // 📱 Móviles
-        cvs.width = 288;
-        cvs.height = 400;
-    } else {        // 🖥️ PC
-        cvs.width = 288;
+    if (window.innerWidth <= 768) { // 📱 Móviles
+        cvs.width = window.innerWidth * 0.95;  // 🏃 95% del ancho de la pantalla
+        cvs.height = cvs.width * (512 / 288);  // 📏 Mantener proporción original
+    } else {
+        cvs.width = 288;                      // 🖥️ Tamaño original para PC
         cvs.height = 512;
     }
 }
 ajustarCanvas();
 window.addEventListener('resize', () => {
-    isMobile = window.innerWidth <= 768;
     ajustarCanvas();
-    reiniciarJuego(); // 🔄 Reiniciar al redimensionar
+    reiniciarJuego(); // 🔄 Reinicia el juego tras el cambio de tamaño
 });
 
-// Cargar imágenes del juego
+// 🎮 Resto del código del juego
 var bird = new Image();
 var bg = new Image();
 var fg = new Image();
@@ -34,7 +31,6 @@ fg.src = "images/fg.png";
 pipeNorth.src = "images/pipeNorth.png";
 pipeSouth.src = "images/pipeSouth.png";
 
-// Variables del juego
 var gap;
 var bX;
 var bY;
@@ -43,13 +39,11 @@ var score = 0;
 var pipe = [];
 var gameOver = false;
 
-// Cargar sonidos
 var fly = new Audio();
 var scor = new Audio();
 fly.src = "sounds/fly.mp3";
 scor.src = "sounds/score.mp3";
 
-// 🎮 Eventos para salto
 document.addEventListener("keydown", moveUp);
 document.addEventListener("touchstart", moveUp);
 
@@ -58,28 +52,25 @@ function moveUp() {
     fly.play();
 }
 
-// 🔧 💡 Generar altura controlada para evitar tubos flotantes
 function generarAlturaAleatoria() {
     let alturaDisponible = cvs.height - fg.height - gap - pipeSouth.height;
-    let alturaMinima = -pipeNorth.height + 50;  // 🎯 Ajuste del mínimo para evitar flotación
+    let alturaMinima = -pipeNorth.height + 50;
     return Math.floor(Math.random() * (alturaDisponible - alturaMinima + 1)) + alturaMinima;
 }
 
-// 🛠️ Inicializar o reiniciar el juego
 function reiniciarJuego() {
-    gap = isMobile ? cvs.height * 0.22 : cvs.height * 0.18; // 📏 Espacio proporcional
+    gap = cvs.height * 0.22;
     bX = cvs.width * 0.1;
     bY = cvs.height / 2;
     score = 0;
     pipe = [{
         x: cvs.width,
-        y: generarAlturaAleatoria() // ✅ Primer tubo corregido
+        y: generarAlturaAleatoria()
     }];
     gameOver = false;
     draw();
 }
 
-// 🏃 Dibujo principal
 function draw() {
     if (gameOver) return;
 
@@ -97,7 +88,7 @@ function draw() {
         if (pipe[i].x === Math.floor(cvs.width / 2)) {
             pipe.push({
                 x: cvs.width,
-                y: generarAlturaAleatoria() // ✅ Altura ajustada y controlada
+                y: generarAlturaAleatoria()
             });
         }
 
@@ -133,7 +124,6 @@ function draw() {
     if (!gameOver) requestAnimationFrame(draw);
 }
 
-// 🚀 Iniciar el juego
 reiniciarJuego();
 
 
